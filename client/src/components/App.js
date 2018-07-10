@@ -51,7 +51,7 @@ class App extends Component {
     var simpleStorageInstance
 
     // Get accounts.
-    this.state.web3.eth.getAccounts((error, accounts) => {tap(accounts);
+    this.state.web3.eth.getAccounts((error, accounts) => {
       simpleStorage.deployed().then((instance) => {
         simpleStorageInstance = instance
 
@@ -79,6 +79,10 @@ class App extends Component {
                     <Button onClick={() => getTodos()}>Todos</Button>
                 </Panel>
             </Side>
+
+            <Main>
+                
+            </Main>
 
         </Content>
 
