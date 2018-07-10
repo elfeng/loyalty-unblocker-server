@@ -1,6 +1,6 @@
 pragma solidity ^0.4.18;
 
-contract SimpleStorage {
+contract Loyalty {
   uint storedData;
 
   function set(uint x) public {
