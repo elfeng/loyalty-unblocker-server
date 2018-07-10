@@ -13,3 +13,5 @@ export const getLookup = get('', api + 'Rate/GetProductSummary?Date=07%2F04%2F20
 export const getRates = get('rates', api + 'Rate/GetRates?RtOptCity=SEA&Date=07%2F04%2F2018&Itin=15648&Currency=USD&Pax=2&passengerAge=0');
 
 export const book = post('bookings', api + 'book');
+
+export const getProducts = post('products', api + 'products');

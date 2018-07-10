@@ -9,6 +9,7 @@ import Booking from './Booking';
 import { setupAWS, initContract } from 'utils/setup';
 import { set } from 'utils/action';
 import { tap } from 'utils';
+import Products from './Products';
 
 class App extends Component {
   componentWillMount() {
@@ -36,6 +37,7 @@ class App extends Component {
             <Main>
                 <Booking/>
                 <Lex/>
+                <Products/>
             </Main>
 
         </Content>
