@@ -1,6 +1,6 @@
-import { get, set } from 'utils/action';
+import { get, post, set } from 'utils/action';
 
-const api = 'http://localhost:90/bookingengine/cruise/';
+const api = 'http://localhost:8080/';
 
 export const setStep = set('step');
 
@@ -11,3 +11,5 @@ export const getTodos = get('Todos', 'https://my-json-server.typicode.com/ln613/
 export const getLookup = get('', api + 'Rate/GetProductSummary?Date=07%2F04%2F2018&Itin=15648&RtOptCity=SEA&Currency=USD&Pax=2&ClCd=PC');
 
 export const getRates = get('rates', api + 'Rate/GetRates?RtOptCity=SEA&Date=07%2F04%2F2018&Itin=15648&Currency=USD&Pax=2&passengerAge=0');
+
+export const book = post('bookings', api + 'book');

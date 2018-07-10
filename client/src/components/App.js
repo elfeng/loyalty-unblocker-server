@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import SimpleStorageContract from '../build/contracts/SimpleStorage.json'
-import getWeb3 from './utils/getWeb3'
-import { tap } from './utils';
+import SimpleStorageContract from '../../build/contracts/SimpleStorage.json'
+import getWeb3 from 'utils/getWeb3'
 import { Switch, Route, withRouter } from 'react-router-dom';
-import { Page, Header, Menu, Side, Content, Main, BackToTop, Button, Panel, DoubleSelect } from './cdesk';
-import { TextBox, Select } from './form';
+import { Page, Header, Menu, Side, Content, Main, BackToTop, Button, Panel, DoubleSelect } from 'cdesk';
+import { TextBox, Select } from 'form';
 import { setStep, setDeep, getTodos, getLookup, getRates } from 'actions';
+import Booking from './Booking';
 
 class App extends Component {
   constructor(props) {
@@ -81,7 +81,7 @@ class App extends Component {
             </Side>
 
             <Main>
-                
+                <Booking/>
             </Main>
 
         </Content>
