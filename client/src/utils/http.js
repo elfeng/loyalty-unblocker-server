@@ -15,9 +15,9 @@ export const get = ({url, path}) => http(url, path, {
 })
 
 export const post = ({url, path, body}) => http(url, path, {
-    //headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
     method: 'POST',
     //mode: 'no-cors',
-    credentials: 'include',
+    // credentials: 'include',
     body: JSON.stringify(body)
 })
