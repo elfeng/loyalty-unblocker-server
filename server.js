@@ -15,6 +15,19 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
+const cors = (req, res, next) => {
+    res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,PATCH,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+
+    if ('OPTIONS' == req.method) {
+      res.send(200);
+    } else {
+      next();
+    }
+  }
+app.use(cors);
+
 var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
     ip   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0',
     mongoURL = process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL,
