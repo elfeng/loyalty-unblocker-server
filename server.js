@@ -2,6 +2,7 @@
 var express = require('express'),
     app     = express(),
     morgan  = require('morgan'),
+    fs      = require('fs'),
     bodyParser = require('body-parser');
     
 Object.assign=require('object-assign')
@@ -156,6 +157,45 @@ app.post('/products', function (req, res) {
         } else {
             res.send('{ "status": "error", "message": "missing request params" }');
         }
+    } else {
+        res.send('{ "status": "error", "message": "mongodb not initialized" }');
+    }
+});
+
+app.post('/initData', function (req, res) {
+    if (!db) {
+        initDb(function(err){});
+    }
+    if (db) {
+        db.collection('products').remove({});
+        fs.readFile('json/products.json', 'utf8', function (err, data) {
+            if (err) throw err;
+            console.log(data);
+            var json = JSON.parse(data);
+
+            db.collection('products').insert(json, function(err, doc) {
+                if (err) throw err;
+            })
+        });
+        fs.readFile('json/products2.json', 'utf8', function (err, data) {
+            if (err) throw err;
+            console.log(data);
+            var json = JSON.parse(data);
+
+            db.collection('products').insert(json, function(err, doc) {
+                if (err) throw err;
+            })
+        });
+        fs.readFile('json/products3.json', 'utf8', function (err, data) {
+            if (err) throw err;
+            console.log(data);
+            var json = JSON.parse(data);
+
+            db.collection('products').insert(json, function(err, doc) {
+                if (err) throw err;
+            })
+        });
+        res.send('{ "status": "complete" }');
     } else {
         res.send('{ "status": "error", "message": "mongodb not initialized" }');
     }

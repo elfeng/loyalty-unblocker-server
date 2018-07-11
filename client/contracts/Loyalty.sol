@@ -8,6 +8,14 @@ contract Loyalty {
   }
 
   function get() public view returns (uint) {
-    return storedData;
+    return this.balance;
+  }
+
+  function addFund() payable returns (uint) {
+    return this.balance;
+  }
+
+  function pay() {
+    msg.sender.transfer(0.1 ether);
   }
 }
