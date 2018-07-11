@@ -8,4 +8,7 @@ export const Header = () =>
                 <img src={logo} class="logo-CAT" alt="" />
             </a>
         </div>
+        <div className="medium-4 columns vert-align-center sm-padding-top sm-padding-bottom">
+            # of tokens: {}
+        </div>
     </header>
