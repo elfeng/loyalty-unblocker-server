@@ -35,15 +35,14 @@ class App extends Component {
         <Menu />
         <Content>
             <Side>
-                <Panel title="Booking Summary">
-                    <TextBox name="bs.tb1" />
+                <Panel title="Booking Assistant">
+                    <Lex/>
                 </Panel>
             </Side>
 
             <Main>
-                <Lex/>
+                
                 <Product/>
-                <Booking/>
             </Main>
 
         </Content>
