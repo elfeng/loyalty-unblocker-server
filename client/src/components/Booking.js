@@ -4,15 +4,15 @@ import { book } from 'actions';
 import { Button } from 'cdesk';
 import { set } from 'utils/action';
 import { tap } from 'utils';
+import { CheckBox } from 'form';
 
 const Booking = ({status, book, setEther, ether, products}) =>
     <div>
         <form id="nameForm" style={{marginTop: '10px'}}>
             <input type="text" id="nameText" size="80" placeholder="Enter a name"/>
         </form>
-        <form id="redeemPointsCheckbox" style={{marginTop: '10px'}}>
-            <input type="checkbox" id="redeemPoints"/> Redeem points?
-        </form>
+        <CheckBox name="redeemPoints" title="Redeem points?"/>
+
         <Button onClick={() => book({ name: document.getElementById('nameText').value.trim(), sailingCode: products.SailingCode })}>Book</Button>
         <div>Status: {status}</div>
         <br/>

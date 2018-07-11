@@ -6,7 +6,7 @@ import { set } from 'utils/action';
 import { tap } from 'utils';
 import ship from '../images/ship.jpeg';
 
-const Product = ({status, book, setEther, ether, products}) => products ?
+const Product = ({status, book, setEther, ether, products, isRedeemPoints}) => products ?
     <div data-flex-flip="smallTablet"
          class="cf flex-1up flex-listing flex-theme-light flex-collapse cols-nested sailing-cruise-card">
         <div class="col cruise-card-content">
@@ -37,7 +37,7 @@ const Product = ({status, book, setEther, ether, products}) => products ?
                             <div id="ember1561" class="ember-view">
                                 <div class="price">
     <span aria-hidden="true">
-      from <br/><span class="strikeout-price-card"><s>$1199</s> </span><span class="card-price">$399</span><br/>per person*
+      from <br/><span class="card-price">${isRedeemPoints ? products.Price - ether * 100 : products.Price}</span><br/>per person*
     </span>
                                     <span class="visuallyhidden">
       strikeoutPricePerPersonAccessible=Price was starting from $1199per person*. This crossed out price reflects the standard rate. Price is starting from 399per person*
@@ -85,4 +85,4 @@ const Product = ({status, book, setEther, ether, products}) => products ?
     </div>
 : null
 
-export default connect(s => ({ status: (s.bookings || {}).status, ether: s.ether, products: s.products }), { book, setEther: set('ether') })(Product);
+export default connect(s => ({ status: (s.bookings || {}).status, ether: s.ether, products: s.products, isRedeemPoints: (s.form || {}).redeemPoints }), { book, setEther: set('ether') })(Product);

@@ -4,5 +4,6 @@
     "Date" : "2018-10",
     "Nights" : "8",
     "Stateroom" : "inside",
-    "SailingCode" : "B830"
+    "SailingCode" : "B830",
+    "Price": 345.67
 }
