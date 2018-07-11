@@ -14,4 +14,4 @@ export const getRates = get('rates', api + 'Rate/GetRates?RtOptCity=SEA&Date=07%
 
 export const book = post('bookings', api + 'book');
 
-export const setLoyalty = set('loyalty');
+export const getProducts = post('products', api + 'products');

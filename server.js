@@ -131,6 +131,37 @@ app.post('/book', function(req, res) {
     }
 });
 
+function getProducts(destination, cruiseLineCode, callback) {
+    var col = db.collection('products');
+    col.find({destination: destination, cruiseLineCode: cruiseLineCode}, function (err, objs) {
+        if (err) {
+            throw err;
+        }
+        callback(objs);
+    });
+}
+
+app.post('/products', function (req, res) {
+    if (!db) {
+        initDb(function(err){});
+    }
+    if (db) {
+        //console.log(req.body);
+        if (req.body.destination && req.body.cruiseLineCode) {
+            getProducts(req.body.destination, req.body.cruiseLineCode, function (data) {
+                data.forEach(function (element) {
+                    res.send(element);
+                });
+                //res.send(data);
+            });
+        } else {
+            res.send('{ "status": "error", "message": "missing request params" }');
+        }
+    } else {
+        res.send('{ "status": "error", "message": "mongodb not initialized" }');
+    }
+});
+
 // error handling
 app.use(function(err, req, res, next){
   console.error(err.stack);
