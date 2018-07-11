@@ -30,10 +30,10 @@ class App extends Component {
             </Side>
 
             <Main>
-                <Booking/>
                 <Lex/>
                 <Product/>
                 <Products/>
+                <Booking/>
             </Main>
 
         </Content>
