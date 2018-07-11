@@ -174,7 +174,6 @@ app.post('/initData', function (req, res) {
             var json = JSON.parse(data);
 
             db.collection('products').insert(json, function(err, doc) {
-                console.log(data);
                 if (err) throw err;
             })
         });
@@ -184,7 +183,6 @@ app.post('/initData', function (req, res) {
             var json = JSON.parse(data);
 
             db.collection('products').insert(json, function(err, doc) {
-                console.log(data);
                 if (err) throw err;
             })
         });
@@ -194,7 +192,6 @@ app.post('/initData', function (req, res) {
             var json = JSON.parse(data);
 
             db.collection('products').insert(json, function(err, doc) {
-                console.log(data);
                 if (err) throw err;
             })
         });
