@@ -15,16 +15,16 @@ import Products from './Products';
 class App extends Component {
   componentWillMount() {
     setupAWS();
-      this.props.setEther(55);
+      //this.props.setEther(55);
 
       initContract().then(r => {
         window.loyalty = r;
         r.instance.get({ from: r.account })
             .then(x => x.c[0] || r.instance.addFund({ from: r.account, value:r.web3.toWei("2", "ether") }).then(y => 2));
-        /*r.web3.eth.getBalance(r.account, (e, x) => {
+        r.web3.eth.getBalance(r.account, (e, x) => {
             const c = r.web3.fromWei(x);
             this.props.setEther(+(c.c[0] + '.' + c.c[1].toString().slice(0, 2)));
-        });*/
+        });
     });
   }
 
@@ -43,6 +43,7 @@ class App extends Component {
             <Main>
                 
                 <Product/>
+                <Booking/>
             </Main>
 
         </Content>

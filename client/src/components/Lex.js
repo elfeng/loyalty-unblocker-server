@@ -17,7 +17,7 @@ class Lex extends Component {
     return (
         <div>
             <div id="conversation" class="bot"></div>
-            <form id="chatform" style={{marginTop: '10px'}} onSubmit={e => pushChat(this.props.getProducts, e)}>
+            <form id="chatform" style={{marginTop: '10px'}} onSubmit={e => pushChat1(this.props.getProducts, e)}>
                 <input type="text" id="wisdom" size="80" placeholder="What would you like to do"/>
             </form>
         </div>
@@ -27,7 +27,12 @@ class Lex extends Component {
 
 export default connect(null, { getProducts })(Lex)
 
-function pushChat(getProducts, e) {
+function pushChat1(getProducts, e) {
+    pushChat(getProducts);
+    e.preventDefault();
+}
+
+function pushChat(getProducts) {
 
     // if there is text to be sent...
     var wisdomText = document.getElementById('wisdom');
@@ -63,8 +68,6 @@ function pushChat(getProducts, e) {
             wisdomText.locked = false;
         });
     }
-    // we always cancel form submission
-    e.preventDefault();
 }
 
 function showRequest(daText) {
@@ -111,10 +114,10 @@ function showResponse(lexResponse, getProducts) {
                 var t = document.createTextNode(btnText);
                 btn.appendChild(t);
                 responsePara.appendChild(btn);
-                btn.addEventListener("click", function(){
+                btn.addEventListener("click", function(e){
                     var wisdomText = document.getElementById('wisdom');
-                    wisdomText.value = btnText;
-                    pushChat();
+                    wisdomText.value = e.srcElement.innerText;
+                    pushChat(getProducts);
                 });
             }
         }
