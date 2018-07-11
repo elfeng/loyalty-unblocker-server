@@ -41,7 +41,6 @@ class App extends Component {
             <Main>
                 <Lex/>
                 <Product/>
-                <Products/>
                 <Booking/>
             </Main>
 

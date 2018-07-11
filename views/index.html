@@ -59,7 +59,7 @@
 	</p>
 	<div id="conversation" style="width: 400px; height: 400px; border: 1px solid #ccc; background-color: #eee; padding: 4px; overflow: scroll"></div>
 	<form id="chatform" style="margin-top: 10px" onsubmit="return pushChat();">
-		<input type="text" id="wisdom" size="80" value="" placeholder="I need a hotel room">
+		<input type="text" id="wisdom" size="80" value="" placeholder="I would like to book a cruise">
 	</form>
 	<script type="text/javascript">
 		// set the focus to the input box
@@ -149,8 +149,21 @@
 					'Ready for fulfillment'));
 				// TODO:  show slot values
 			} else {
-				responsePara.appendChild(document.createTextNode(
-					'(' + lexResponse.dialogState + ')'));
+				if (lexResponse.slotToElicit == 'CruiseLine' || lexResponse.slotToElicit == 'Destination' || lexResponse.slotToElicit == 'StateRoom') {
+					var  responseCardOptions = lexResponse.responseCard.genericAttachments[0].buttons;
+					for (var i = 0; i < responseCardOptions.length; i++) {
+						var btn = document.createElement("button");
+						var btnText = responseCardOptions[i].value;
+						var t = document.createTextNode(btnText);
+						btn.appendChild(t);
+						responsePara.appendChild(btn);
+						btn.addEventListener("click", function(){
+							var wisdomText = document.getElementById('wisdom');
+							wisdomText.value = btnText;
+							pushChat();
+						});
+					}
+				}
 			}
 			conversationDiv.appendChild(responsePara);
 			conversationDiv.scrollTop = conversationDiv.scrollHeight;

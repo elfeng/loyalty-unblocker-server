@@ -10,6 +10,9 @@ const Booking = ({status, book, setEther, ether, products}) =>
         <form id="nameForm" style={{marginTop: '10px'}}>
             <input type="text" id="nameText" size="80" placeholder="Enter a name"/>
         </form>
+        <form id="redeemPointsCheckbox" style={{marginTop: '10px'}}>
+            <input type="checkbox" id="redeemPoints"/> Redeem points?
+        </form>
         <Button onClick={() => book({ name: document.getElementById('nameText').value.trim(), sailingCode: products.SailingCode })}>Book</Button>
         <div>Status: {status}</div>
         <br/>
