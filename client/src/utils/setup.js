@@ -1,6 +1,7 @@
 import Loyalty from '../../build/contracts/Loyalty.json';
 import contract from 'truffle-contract';
 import getWeb3 from 'utils/getWeb3'
+import {tap} from 'utils';
 
 export const setupAWS = () => {
     window.AWS.config.region = 'us-west-2'; // Region
@@ -14,5 +15,7 @@ export const initContract = () => getWeb3.then(results => {
     const loyalty = contract(Loyalty);
     loyalty.setProvider(web3.currentProvider);
 
-    return web3.eth.getAccounts((error, accounts) => loyalty.deployed().then(instance => [web3, instance, accounts[0]]))
+    return getAccountsPromise(web3).then(accounts => loyalty.deployed().then(instance => ({web3, instance, account: accounts[0]})));
 });
+
+const getAccountsPromise = web3 => new Promise((resolve, reject) => web3.eth.getAccounts((e, accounts) => e ? reject(e) : resolve(accounts)));

@@ -1,7 +1,14 @@
 import React, { Component } from 'react'
 
+let lexruntime;
+let lexUserId;
+let sessionAttributes;
+
 class Lex extends Component {
   componentWillMount() {
+    lexruntime = new window.AWS.LexRuntime();
+    lexUserId = 'chatbot-demo' + Date.now();
+    sessionAttributes = {};
   }
 
   render() {
@@ -17,10 +24,6 @@ class Lex extends Component {
 }
 
 export default Lex
-
-var lexruntime = new window.AWS.LexRuntime();
-var lexUserId = 'chatbot-demo' + Date.now();
-var sessionAttributes = {};
 
 function pushChat(e) {
 
