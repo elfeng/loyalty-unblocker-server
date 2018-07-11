@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import { getProducts } from 'actions';
+import { connect } from 'react-redux';
 
 let lexruntime;
 let lexUserId;
@@ -15,7 +17,7 @@ class Lex extends Component {
     return (
         <div>
             <div id="conversation" class="bot"></div>
-            <form id="chatform" style={{marginTop: '10px'}} onSubmit={pushChat}>
+            <form id="chatform" style={{marginTop: '10px'}} onSubmit={e => pushChat(this.props.getProducts, e)}>
                 <input type="text" id="wisdom" size="80" placeholder="Book a cruise"/>
             </form>
         </div>
@@ -23,9 +25,9 @@ class Lex extends Component {
   }
 }
 
-export default Lex
+export default connect(null, { getProducts })(Lex)
 
-function pushChat(e) {
+function pushChat(getProducts, e) {
 
     // if there is text to be sent...
     var wisdomText = document.getElementById('wisdom');
@@ -54,7 +56,7 @@ function pushChat(e) {
                 // capture the sessionAttributes for the next cycle
                 sessionAttributes = data.sessionAttributes;
                 // show response and/or error/dialog status
-                showResponse(data);
+                showResponse(data, getProducts);
             }
             // re-enable input
             wisdomText.value = '';
@@ -85,7 +87,7 @@ function showError(daText) {
     conversationDiv.scrollTop = conversationDiv.scrollHeight;
 }
 
-function showResponse(lexResponse) {
+function showResponse(lexResponse, getProducts) {
 
     var conversationDiv = document.getElementById('conversation');
     var responsePara = document.createElement("P");
@@ -98,6 +100,8 @@ function showResponse(lexResponse) {
         responsePara.appendChild(document.createTextNode(
             'Ready for fulfillment'));
         // TODO:  show slot values
+    } else if (lexResponse.dialogState === 'Fulfilled') {
+        getProducts(lexResponse.slots);
     } else {
         responsePara.appendChild(document.createTextNode(
             '(' + lexResponse.dialogState + ')'));
