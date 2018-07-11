@@ -13,6 +13,7 @@ let config, conversation;
 
 class Lex extends Component {
   componentDidMount() {
+      const p = this.props;
     lexruntime = new window.AWS.LexRuntime();
     lexUserId = 'chatbot-demo' + Date.now();
     sessionAttributes = {};
@@ -42,7 +43,7 @@ class Lex extends Component {
         }, function (data) {
             message1.textContent = 'Transcript: ' + data.inputTranscript + ", Response: " + tap(data).message;
             if (data.dialogState === 'Fulfilled')
-                this.props.getProducts(data.slots);
+                p.getProducts(data.slots);
         }, function (error) {
             message1.textContent = error;
         }, function (timeDomain, bufferLength) {
@@ -55,9 +56,8 @@ class Lex extends Component {
   }
 
   render() {
-    return (
-        <div>
-        <div class="audio-control" style={{display: this.props.isAudio ? 'block' : 'none'}}>
+    return ( this.props.isAudio ?
+        <div class="audio-control">
             <p id="audio-control" class="white-circle">
                 <img src="lex.png"/>
                 <canvas class="visualizer"></canvas>
@@ -65,12 +65,11 @@ class Lex extends Component {
             <p><span id="message"></span></p>
             <p><span id="message1"></span></p>
         </div> :
-        <div style={{display: this.props.isAudio ? 'none' : 'block'}}>
+        <div>
             <div id="conversation" class="bot"></div>
             <form id="chatform" style={{marginTop: '10px'}} onSubmit={e => pushChat1(this.props.getProducts, e)}>
                 <input type="text" id="wisdom" size="80" placeholder="What would you like to do"/>
             </form>
-        </div>
         </div>
     );
   }
