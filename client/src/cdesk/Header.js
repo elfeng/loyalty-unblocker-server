@@ -11,8 +11,8 @@ const _Header = ({ether, isRedeemPoints, products}) =>
                 <img src={logo} class="logo-CAT" alt="" />
             </a>
         </div>
-        <div className="medium-4 columns vert-align-center sm-padding-top sm-padding-bottom">
-            # of tokens: {isRedeemPoints ? ether - products.Price / 100 : ether }
+        <div className="medium-4 columns vert-align-center sm-padding-top sm-padding-bottom content">
+            # of tokens: <b>{isRedeemPoints ? ether - products.Price / 100 : ether }</b>
         </div>
     </header>
 

@@ -37,6 +37,10 @@ class App extends Component {
             <Side>
                 <Panel title="Booking Assistant">
                     <Lex/>
+                    <div>
+                        <Button onClick={() => this.props.setAudio(false)}>Text</Button>&nbsp;&nbsp;
+                        <Button onClick={() => this.props.setAudio(true)}>Audio</Button>
+                    </div>
                 </Panel>
             </Side>
 
@@ -54,4 +58,4 @@ class App extends Component {
   }
 }
 
-export default connect(null, { setLoyalty: set('loyalty'), setEther })(App)
+export default connect(null, { setLoyalty: set('loyalty'), setEther, setAudio: set('isAudio') })(App)

@@ -8,7 +8,7 @@ import ship from '../images/ship.jpeg';
 
 const Product = ({status, book, setEther, ether, products, isRedeemPoints}) => products ?
     <div data-flex-flip="smallTablet"
-         class="cf flex-1up flex-listing flex-theme-light flex-collapse cols-nested sailing-cruise-card">
+         class="cf flex-1up flex-listing flex-theme-light flex-collapse cols-nested sailing-cruise-card content">
         <div class="col cruise-card-content">
             <div class="flex-card ">
                 <div class="flex-figure">
@@ -17,16 +17,16 @@ const Product = ({status, book, setEther, ether, products, isRedeemPoints}) => p
                 <div class="flex-area-primary">
                     <div class="card-content">
                         <div class="ship-name">
-                            Cruise line: {products.CruiseLine}
+                            Cruise line: <b>{products.CruiseLine}</b>
                         </div>
                         <div class="departing-on-text">
-                            Departing on <span class="departing-on">{products.Date}</span> for {products.Nights} nights
+                            Departing on <span class="departing-on"><b>{products.Date}</b></span> for <b>{products.Nights}</b> nights
                         </div>
                         <div>
-                            Destination: {products.Destination}
+                            Destination: <b>{products.Destination}</b>
                         </div>
                         <div>
-                            Sailing code: {products.SailingCode}
+                            Sailing code: <b>{products.SailingCode}</b>
                         </div>
                     </div>
                 </div>
@@ -37,7 +37,7 @@ const Product = ({status, book, setEther, ether, products, isRedeemPoints}) => p
                             <div id="ember1561" class="ember-view">
                                 <div class="price">
     <span aria-hidden="true">
-      from <br/><span class="card-price">${isRedeemPoints ? ((products.Price - ether * 100) < 0 ? 0 : products.Price - ether * 100 ) : products.Price}</span><br/>per person*
+      from<br/><span class="card-price"><b>${isRedeemPoints ? ((products.Price - ether * 100) < 0 ? 0 : products.Price - ether * 100 ) : products.Price}</b></span><br/>per person*
     </span>
                                     <span class="visuallyhidden">
       strikeoutPricePerPersonAccessible=Price was starting from $1199per person*. This crossed out price reflects the standard rate. Price is starting from 399per person*
