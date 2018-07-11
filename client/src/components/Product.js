@@ -37,7 +37,7 @@ const Product = ({status, book, setEther, ether, products, isRedeemPoints}) => p
                             <div id="ember1561" class="ember-view">
                                 <div class="price">
     <span aria-hidden="true">
-      from <br/><span class="card-price">${isRedeemPoints ? products.Price - ether * 100 : products.Price}</span><br/>per person*
+      from <br/><span class="card-price">${isRedeemPoints ? ((products.Price - ether * 100) < 0 ? 0 : products.Price - ether * 100 ) : products.Price}</span><br/>per person*
     </span>
                                     <span class="visuallyhidden">
       strikeoutPricePerPersonAccessible=Price was starting from $1199per person*. This crossed out price reflects the standard rate. Price is starting from 399per person*
