@@ -85,4 +85,4 @@ const Product = ({status, book, setEther, ether, products}) => products ?
     </div>
 : null
 
-export default connect(s => ({ status: (s.bookings || {}).status, ether: s.ether ? s.ether.c[0] : 0, products: s.products }), { book, setEther: set('ether') })(Product);
+export default connect(s => ({ status: (s.bookings || {}).status, ether: s.ether, products: s.products }), { book, setEther: set('ether') })(Product);

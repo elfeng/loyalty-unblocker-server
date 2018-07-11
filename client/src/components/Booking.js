@@ -21,4 +21,4 @@ const Booking = ({status, book, setEther, ether, products}) =>
         <span>{ether}</span>
     </div>;
 
-export default connect(s => ({ status: (s.bookings || {}).status, ether: s.ether ? s.ether.c[0] : 0, products: (s.products || {}) }), { book, setEther: set('ether') })(Booking);
+export default connect(s => ({ status: (s.bookings || {}).status, ether: s.ether, products: (s.products || {}) }), { book, setEther: set('ether') })(Booking);
