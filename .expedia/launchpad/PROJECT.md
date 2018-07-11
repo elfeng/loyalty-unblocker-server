@@ -1,4 +1,6 @@
-<iframe src="https://www.youtube.com/embed/YxMfN9zQTRY?showinfo=0" class="youtube" frameborder="0" allowfullscreen></iframe>
+<iframe src="https://oneteam.exp-tools.net/video/fc20e10f-c007-48ca-b6c2-36bd7be90b6a" class="youtube" frameborder="0" allowfullscreen></iframe>
+
+[Demo video](https://oneteam.exp-tools.net/video/fc20e10f-c007-48ca-b6c2-36bd7be90b6a)
 
 ## What is Loyalty Unblocker?
 This is a PoC application that offers loyalty points in the form of Ether, which can then be redeemed on Expedia as well as other businesses.
