@@ -18,7 +18,7 @@ class Lex extends Component {
         <div>
             <div id="conversation" class="bot"></div>
             <form id="chatform" style={{marginTop: '10px'}} onSubmit={e => pushChat(this.props.getProducts, e)}>
-                <input type="text" id="wisdom" size="80" placeholder="Book a cruise"/>
+                <input type="text" id="wisdom" size="80" placeholder="What would you like to do"/>
             </form>
         </div>
     );
@@ -103,8 +103,21 @@ function showResponse(lexResponse, getProducts) {
     } else if (lexResponse.dialogState === 'Fulfilled') {
         getProducts(lexResponse.slots);
     } else {
-        responsePara.appendChild(document.createTextNode(
-            '(' + lexResponse.dialogState + ')'));
+        if (lexResponse.slotToElicit == 'CruiseLine' || lexResponse.slotToElicit == 'Destination' || lexResponse.slotToElicit == 'StateRoom') {
+            var  responseCardOptions = lexResponse.responseCard.genericAttachments[0].buttons;
+            for (var i = 0; i < responseCardOptions.length; i++) {
+                var btn = document.createElement("button");
+                var btnText = responseCardOptions[i].value;
+                var t = document.createTextNode(btnText);
+                btn.appendChild(t);
+                responsePara.appendChild(btn);
+                btn.addEventListener("click", function(){
+                    var wisdomText = document.getElementById('wisdom');
+                    wisdomText.value = btnText;
+                    pushChat();
+                });
+            }
+        }
     }
     conversationDiv.appendChild(responsePara);
     conversationDiv.scrollTop = conversationDiv.scrollHeight;
