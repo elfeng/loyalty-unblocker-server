@@ -11,7 +11,7 @@ const http = function* (url, path, option) {
 
 export const get = ({url, path}) => http(url, path, {
     method: "GET",
-    credentials: 'include'
+    // credentials: 'include'
 })
 
 export const post = ({url, path, body}) => http(url, path, {

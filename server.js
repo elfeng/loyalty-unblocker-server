@@ -30,7 +30,7 @@ app.use(cors);
 
 var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
     ip   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0',
-    mongoURL = process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL,
+    mongoURL = process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL || 'mongodb://localhost:27017/vttc',
     mongoURLLabel = "";
 
 if (mongoURL == null && process.env.DATABASE_SERVICE_NAME) {
@@ -122,10 +122,40 @@ app.post('/book', function(req, res) {
     }
     if (db) {
         var col = db.collection('trip_details');
-        col.insertOne({firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            tripId: req.body.tripId});
+        col.insertOne({name: req.body.name,
+            sailingCode: req.body.sailingCode});
         res.send('{ "status": "success" }');
+    } else {
+        res.send('{ "status": "error", "message": "mongodb not initialized" }');
+    }
+});
+
+function getProducts(Destination, CruiseLine, callback) {
+    var col = db.collection('products');
+    col.find({Destination: Destination.trim().toLowerCase(), CruiseLine: CruiseLine.trim().toLowerCase()}, function (err, objs) {
+        if (err) {
+            throw err;
+        }
+        callback(objs);
+    });
+}
+
+app.post('/products', function (req, res) {
+    if (!db) {
+        initDb(function(err){});
+    }
+    if (db) {
+        if (req.body.Destination && req.body.CruiseLine) {
+            getProducts(req.body.Destination, req.body.CruiseLine, function (data) {
+                data.forEach(function (element) {
+                    console.log(element);
+                    res.send(element);
+                });
+                //res.send(data);
+            });
+        } else {
+            res.send('{ "status": "error", "message": "missing request params" }');
+        }
     } else {
         res.send('{ "status": "error", "message": "mongodb not initialized" }');
     }

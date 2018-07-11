@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import createStore from 'utils/store';
 import App from 'components/App'
 import 'css/styles.css';
+import 'css/expedia.css';
 import 'css/menuNavStyle.css';
 import 'css/main.css';
 import { isDev } from 'utils/env';

@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from '../images/logo-CAT.png';
+import logo from '../images/logo.svg';
 
 export const Header = () =>
     <header class="row show-for-medium-up wide bg-white eq-height-col">
