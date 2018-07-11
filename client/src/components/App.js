@@ -29,9 +29,9 @@ class App extends Component {
             </Side>
 
             <Main>
-                <Booking/>
                 <Lex/>
                 <Products/>
+                <Booking/>
             </Main>
 
         </Content>
