@@ -72,3 +72,12 @@ p.lexError {
 .bot {
     width: 400px; height: 400px; border: 1px solid #ccc; background-color: #eee; padding: 4px; overflow: scroll
 }
+
+.flex-card {
+    display: flex;
+    flex-direction: row;
+}
+
+.flex-area-primary {
+    flex-grow: 1;
+}

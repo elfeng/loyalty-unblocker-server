@@ -5,6 +5,7 @@ import { Page, Header, Menu, Side, Content, Main, BackToTop, Button, Panel, Doub
 import { TextBox, Select } from 'form';
 import Lex from './Lex';
 import Booking from './Booking';
+import Product from './Product';
 import { setupAWS, initContract } from 'utils/setup';
 import { set } from 'utils/action';
 import { tap } from 'utils';
@@ -31,6 +32,7 @@ class App extends Component {
             <Main>
                 <Booking/>
                 <Lex/>
+                <Product/>
                 <Products/>
             </Main>
 
