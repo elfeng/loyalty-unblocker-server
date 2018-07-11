@@ -21,7 +21,7 @@ class Booking extends React.Component {
 
     render() {
         const {status, book, setEther, ether, products, isRedeemPoints} = this.props;
-        return ( products ?
+        return ( status === "success" ? <div class="success">Booking Successful!</div> : (products ?
     <div>
         <form id="nameForm" style={{marginTop: '10px'}}>
             <input type="text" id="nameText" size="80" placeholder="Enter a name"/>
@@ -35,7 +35,7 @@ class Booking extends React.Component {
             else
                 book(v);
         }}>Book</Button>
-    </div> : null
+    </div> : null)
         );
     }
 }

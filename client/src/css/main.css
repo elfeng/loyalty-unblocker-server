@@ -84,3 +84,8 @@ p.lexError {
 .flex-area-primary {
     flex-grow: 1;
 }
+
+.success {
+    font-size: 64px;
+    color: green;
+}
