@@ -122,18 +122,17 @@ app.post('/book', function(req, res) {
     }
     if (db) {
         var col = db.collection('trip_details');
-        col.insertOne({firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            tripId: req.body.tripId});
+        col.insertOne({name: req.body.name,
+            sailingCode: req.body.sailingCode});
         res.send('{ "status": "success" }');
     } else {
         res.send('{ "status": "error", "message": "mongodb not initialized" }');
     }
 });
 
-function getProducts(destination, cruiseLineCode, callback) {
+function getProducts(Destination, CruiseLine, callback) {
     var col = db.collection('products');
-    col.find({destination: destination, cruiseLineCode: cruiseLineCode}, function (err, objs) {
+    col.find({Destination: Destination.trim().toLowerCase(), CruiseLine: CruiseLine.trim().toLowerCase()}, function (err, objs) {
         if (err) {
             throw err;
         }
@@ -146,10 +145,10 @@ app.post('/products', function (req, res) {
         initDb(function(err){});
     }
     if (db) {
-        //console.log(req.body);
-        if (req.body.destination && req.body.cruiseLineCode) {
-            getProducts(req.body.destination, req.body.cruiseLineCode, function (data) {
+        if (req.body.Destination && req.body.CruiseLine) {
+            getProducts(req.body.Destination, req.body.CruiseLine, function (data) {
                 data.forEach(function (element) {
+                    console.log(element);
                     res.send(element);
                 });
                 //res.send(data);
