@@ -140,7 +140,7 @@ app.post('/initData', function (req, res) {
 // error handling
 app.use(function(err, req, res, next){
   console.error(err.stack);
-  res.status(500).json(err);
+  res.status(500).send(err.stack);
 });
 
 initDb(function(err){
