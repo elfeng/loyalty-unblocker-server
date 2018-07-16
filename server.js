@@ -99,6 +99,7 @@ app.post('/products', function (req, res) {
     if (req.body.Destination && req.body.CruiseLine) {
         db.collection('products')
             .find({Destination: req.body.Destination.trim().toLowerCase(), CruiseLine: req.body.CruiseLine.trim().toLowerCase()})
+            .toArray()
             .then(r => res.json(r));
     } else {
         res.send('{ "status": "error", "message": "missing request params" }');
