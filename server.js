@@ -54,9 +54,6 @@ if (process.env.DATABASE_SERVICE_NAME) {
   }
 }
 
-console.log('DATABASE_SERVICE_NAME: ' + process.env.DATABASE_SERVICE_NAME);
-console.log('mongoURL: ' + mongoURL);
-
 var db = null,
     dbDetails = new Object();
 
@@ -65,6 +62,9 @@ var initDb = function(callback) {
 
   var mongodb = require('mongodb');
   if (mongodb == null) return;
+
+  console.log('! DATABASE_SERVICE_NAME: ' + process.env.DATABASE_SERVICE_NAME);
+  console.log('! mongoURL: ' + mongoURL);
 
   mongodb.connect(mongoURL, function(err, conn) {
     if (err) {
