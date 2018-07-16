@@ -63,7 +63,7 @@ var initDb = function(callback) {
   if (mongodb == null) return;
 
   mongodb.connect(mongoURL, function(err, conn) {
-    if (err) {
+    if (err && callback) {
       callback(err);
       return;
     }
@@ -77,44 +77,15 @@ var initDb = function(callback) {
   });
 };
 
+initDb();
+
+app.use((req, res, next) => {
+    initdb();
+    next();
+});
+
 app.post('/env', function (req, res) {
     res.json(process.env);
-});
-
-app.get('/lex', function (req, res) {
-  // try to initialize the db on every request if it's not already
-  // initialized.
-  if (!db) {
-    initDb(function(err){});
-  }
-  if (db) {
-    var col = db.collection('counts');
-    // Create a document with request IP and current time of request
-    col.insert({ip: req.ip, date: Date.now()});
-    col.count(function(err, count){
-      if (err) {
-        console.log('Error running count. Message:\n'+err);
-      }
-      res.render('index.html', { pageCountMessage : count, dbInfo: dbDetails });
-    });
-  } else {
-    res.render('index.html', { pageCountMessage : null});
-  }
-});
-
-app.get('/pagecount', function (req, res) {
-  // try to initialize the db on every request if it's not already
-  // initialized.
-  if (!db) {
-    initDb(function(err){});
-  }
-  if (db) {
-    db.collection('counts').count(function(err, count ){
-      res.send('{ pageCount: ' + count + '}');
-    });
-  } else {
-    res.send('{ pageCount: -1 }');
-  }
 });
 
 app.get('/test', function (req, res) {
@@ -122,17 +93,10 @@ app.get('/test', function (req, res) {
 });
 
 app.post('/book', function(req, res) {
-    if (!db) {
-        initDb(function(err){});
-    }
-    if (db) {
-        var col = db.collection('trip_details');
-        col.insertOne({name: req.body.name,
-            sailingCode: req.body.sailingCode});
-        res.send('{ "status": "success" }');
-    } else {
-        res.send('{ "status": "error", "message": "mongodb not initialized" }');
-    }
+    var col = db.collection('trip_details');
+    col.insertOne({name: req.body.name,
+        sailingCode: req.body.sailingCode});
+    res.send('{ "status": "success" }');
 });
 
 function getProducts(Destination, CruiseLine, callback) {
@@ -146,63 +110,49 @@ function getProducts(Destination, CruiseLine, callback) {
 }
 
 app.post('/products', function (req, res) {
-    if (!db) {
-        initDb(function(err){});
-    }
-    if (db) {
-        if (req.body.Destination && req.body.CruiseLine) {
-            getProducts(req.body.Destination, req.body.CruiseLine, function (data) {
-                data.forEach(function (element) {
-                    console.log(element);
-                    res.send(element);
-                });
-                //res.send(data);
+    if (req.body.Destination && req.body.CruiseLine) {
+        getProducts(req.body.Destination, req.body.CruiseLine, function (data) {
+            data.forEach(function (element) {
+                console.log(element);
+                res.send(element);
             });
-        } else {
-            res.send('{ "status": "error", "message": "missing request params" }');
-        }
+            //res.send(data);
+        });
     } else {
-        res.send('{ "status": "error", "message": "mongodb not initialized" }');
+        res.send('{ "status": "error", "message": "missing request params" }');
     }
 });
 
 app.post('/initData', function (req, res) {
-    if (!db) {
-        initDb(function(err){});
-    }
-    if (db) {
-        db.collection('products').remove({});
-        fs.readFile('json/products.json', 'utf8', function (err, data) {
-            if (err) throw err;
-            console.log(data);
-            var json = JSON.parse(data);
+    db.collection('products').remove({});
+    fs.readFile('json/products.json', 'utf8', function (err, data) {
+        if (err) throw err;
+        console.log(data);
+        var json = JSON.parse(data);
 
-            db.collection('products').insert(json, function(err, doc) {
-                if (err) throw err;
-            })
-        });
-        fs.readFile('json/products2.json', 'utf8', function (err, data) {
+        db.collection('products').insert(json, function(err, doc) {
             if (err) throw err;
-            console.log(data);
-            var json = JSON.parse(data);
+        })
+    });
+    fs.readFile('json/products2.json', 'utf8', function (err, data) {
+        if (err) throw err;
+        console.log(data);
+        var json = JSON.parse(data);
 
-            db.collection('products').insert(json, function(err, doc) {
-                if (err) throw err;
-            })
-        });
-        fs.readFile('json/products3.json', 'utf8', function (err, data) {
+        db.collection('products').insert(json, function(err, doc) {
             if (err) throw err;
-            console.log(data);
-            var json = JSON.parse(data);
+        })
+    });
+    fs.readFile('json/products3.json', 'utf8', function (err, data) {
+        if (err) throw err;
+        console.log(data);
+        var json = JSON.parse(data);
 
-            db.collection('products').insert(json, function(err, doc) {
-                if (err) throw err;
-            })
-        });
-        res.send('{ "status": "complete" }');
-    } else {
-        res.send('{ "status": "error", "message": "mongodb not initialized" }');
-    }
+        db.collection('products').insert(json, function(err, doc) {
+            if (err) throw err;
+        })
+    });
+    res.send('{ "status": "complete" }');
 });
 
 // error handling
