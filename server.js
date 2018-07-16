@@ -53,6 +53,9 @@ if (mongoURL == null && process.env.DATABASE_SERVICE_NAME) {
 
   }
 }
+
+console.log(mongoURL);
+
 var db = null,
     dbDetails = new Object();
 
