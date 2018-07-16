@@ -29,42 +29,43 @@ const cors = (req, res, next) => {
   }
 app.use(cors);
 
-var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
-    ip   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0',
-    mongoURL = process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL || 'mongodb://localhost:27017/vttc',
-    mongoURLLabel = "";
+const port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080
 
-if (process.env.DATABASE_SERVICE_NAME) {
-  var mongoServiceName = process.env.DATABASE_SERVICE_NAME.toUpperCase(),
-      mongoHost = process.env[mongoServiceName + '_SERVICE_HOST'],
-      mongoPort = process.env[mongoServiceName + '_SERVICE_PORT'],
-      mongoDatabase = process.env[mongoServiceName + '_DATABASE'],
-      mongoPassword = process.env[mongoServiceName + '_PASSWORD']
-      mongoUser = process.env[mongoServiceName + '_USER'];
+const ip = process.env.IP || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0'
 
-  if (mongoHost && mongoPort && mongoDatabase) {
-    mongoURLLabel = mongoURL = 'mongodb://';
-    if (mongoUser && mongoPassword) {
-      mongoURL += mongoUser + ':' + mongoPassword + '@';
+const getMongoURL = () => {
+  let mongoURL = process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL || 'mongodb://localhost:27017/loyalty';
+  if (process.env.DATABASE_SERVICE_NAME) {
+    const mongoServiceName = process.env.DATABASE_SERVICE_NAME.toUpperCase();
+    const mongoHost = process.env[mongoServiceName + '_SERVICE_HOST'];
+    const mongoPort = process.env[mongoServiceName + '_SERVICE_PORT'];
+    const mongoDatabase = process.env[mongoServiceName + '_DATABASE'];
+    const mongoPassword = process.env[mongoServiceName + '_PASSWORD'];
+    const mongoUser = process.env[mongoServiceName + '_USER'];
+
+    if (mongoHost && mongoPort && mongoDatabase) {
+      mongoURL = 'mongodb://';
+      if (mongoUser && mongoPassword) {
+        mongoURL += mongoUser + ':' + mongoPassword + '@';
+      }
+      mongoURL += mongoHost + ':' + mongoPort + '/' + mongoDatabase;
     }
-    // Provide UI label that excludes user id and pw
-    mongoURLLabel += mongoHost + ':' + mongoPort + '/' + mongoDatabase;
-    mongoURL += mongoHost + ':' +  mongoPort + '/' + mongoDatabase;
-
   }
+  return mongoURL;
 }
 
 var db = null,
     dbDetails = new Object();
 
-var initDb = function(callback) {
-  if (db || mongoURL == null) return;
+var initDb = function() {
+  if (db) return;
+
+  const mongoURL = getMongoURL();
 
   var mongodb = require('mongodb');
   if (mongodb == null) return;
 
-  console.log('! DATABASE_SERVICE_NAME: ' + process.env.DATABASE_SERVICE_NAME);
-  console.log('! mongoURL: ' + mongoURL);
+  console.log('! process.env: ' + process.env);
 
   mongodb.connect(mongoURL, function(err, conn) {
     if (err) {
