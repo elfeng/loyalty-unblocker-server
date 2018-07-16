@@ -54,8 +54,7 @@ const getMongoURL = () => {
   return mongoURL;
 }
 
-var db = null,
-    dbDetails = new Object();
+var db = null;
 
 var initDb = function() {
   const mongoURL = getMongoURL();
@@ -71,9 +70,6 @@ var initDb = function() {
     }
 
     db = conn;
-    dbDetails.databaseName = db.databaseName;
-    dbDetails.url = mongoURLLabel;
-    dbDetails.type = 'MongoDB';
 
     console.log('Connected to MongoDB at: %s', mongoURL);
   });
