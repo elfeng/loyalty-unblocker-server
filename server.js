@@ -54,7 +54,8 @@ if (process.env.DATABASE_SERVICE_NAME) {
   }
 }
 
-console.log(mongoURL);
+console.log('DATABASE_SERVICE_NAME: ' + process.env.DATABASE_SERVICE_NAME);
+console.log('mongoURL: ' + mongoURL);
 
 var db = null,
     dbDetails = new Object();
