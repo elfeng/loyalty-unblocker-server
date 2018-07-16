@@ -80,7 +80,7 @@ var initDb = function(callback) {
 initDb();
 
 app.use((req, res, next) => {
-    initdb();
+    initDb();
     next();
 });
 
