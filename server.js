@@ -77,6 +77,10 @@ var initDb = function(callback) {
   });
 };
 
+app.post('/env', function (req, res) {
+    res.json(process.env);
+});
+
 app.get('/lex', function (req, res) {
   // try to initialize the db on every request if it's not already
   // initialized.
