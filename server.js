@@ -61,7 +61,7 @@ var db = null,
     dbDetails = new Object();
 
 var initDb = function(callback) {
-  if (mongoURL == null) return;
+  if (db || mongoURL == null) return;
 
   var mongodb = require('mongodb');
   if (mongodb == null) return;
@@ -80,8 +80,6 @@ var initDb = function(callback) {
     console.log('Connected to MongoDB at: %s', mongoURL);
   });
 };
-
-initDb();
 
 app.use((req, res, next) => {
     initDb();
