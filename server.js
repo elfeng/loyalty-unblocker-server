@@ -34,7 +34,7 @@ const port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080
 const ip = process.env.IP || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0'
 
 const getMongoURL = () => {
-  let mongoURL = process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL || 'mongodb://localhost:27017/loyalty';
+  let mongoURL = process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL;
   if (process.env.DATABASE_SERVICE_NAME) {
     const mongoServiceName = process.env.DATABASE_SERVICE_NAME.toUpperCase();
     const mongoHost = process.env[mongoServiceName + '_SERVICE_HOST'];
@@ -58,14 +58,11 @@ var db = null,
     dbDetails = new Object();
 
 var initDb = function() {
-  if (db) return;
-
   const mongoURL = getMongoURL();
+  if (db || mongoURL == null) return;
 
   var mongodb = require('mongodb');
   if (mongodb == null) return;
-
-  console.log('! process.env: ' + process.env);
 
   mongodb.connect(mongoURL, function(err, conn) {
     if (err) {
