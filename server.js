@@ -95,25 +95,11 @@ app.post('/book', function(req, res) {
     res.send('{ "status": "success" }');
 });
 
-function getProducts(Destination, CruiseLine, callback) {
-    var col = db.collection('products');
-    col.find({Destination: Destination.trim().toLowerCase(), CruiseLine: CruiseLine.trim().toLowerCase()}, function (err, objs) {
-        if (err) {
-            throw err;
-        }
-        callback(objs);
-    });
-}
-
 app.post('/products', function (req, res) {
     if (req.body.Destination && req.body.CruiseLine) {
-        getProducts(req.body.Destination, req.body.CruiseLine, function (data) {
-            data.forEach(function (element) {
-                console.log(element);
-                res.send(element);
-            });
-            //res.send(data);
-        });
+        db.collection('products')
+            .find({Destination: req.body.Destination.trim().toLowerCase(), CruiseLine: req.body.CruiseLine.trim().toLowerCase()})
+            .then(r => res.json(r));
     } else {
         res.send('{ "status": "error", "message": "missing request params" }');
     }
