@@ -34,7 +34,7 @@ const port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080
 const ip = process.env.IP || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0'
 
 const getMongoURL = () => {
-  let mongoURL = process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL || 'mongodb://localhost:27017/vttc';
+  let mongoURL = process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL || 'mongodb://localhost:27017/loyalty';
   if (process.env.DATABASE_SERVICE_NAME) {
     const mongoServiceName = process.env.DATABASE_SERVICE_NAME.toUpperCase();
     const mongoHost = process.env[mongoServiceName + '_SERVICE_HOST'];
@@ -100,7 +100,7 @@ app.post('/products', function (req, res) {
         db.collection('products')
             .find({Destination: req.body.Destination.trim().toLowerCase(), CruiseLine: req.body.CruiseLine.trim().toLowerCase()})
             .toArray()
-            .then(r => res.json(r));
+            .then(r => res.json(r[0]));
     } else {
         res.send('{ "status": "error", "message": "missing request params" }');
     }
