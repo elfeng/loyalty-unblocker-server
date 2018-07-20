@@ -9,7 +9,7 @@
 	"links": [
 		{
 			"name": "Add any link that helps document or demo your project. DO NOT put your github repo, we will do that for you.",
-			"url": "http://<link_url>"
+			"url": "http://nodejs-mongo-persistent-loyalty-unblocker-server.a3c1.starter-us-west-1.openshiftapps.com/"
 		},
 		{
 			"name": "Loyalty Unblockers",
