@@ -29,88 +29,59 @@ const cors = (req, res, next) => {
   }
 app.use(cors);
 
-var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
-    ip   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0',
-    mongoURL = process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL || 'mongodb://localhost:27017/vttc',
-    mongoURLLabel = "";
+const port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080
 
-if (mongoURL == null && process.env.DATABASE_SERVICE_NAME) {
-  var mongoServiceName = process.env.DATABASE_SERVICE_NAME.toUpperCase(),
-      mongoHost = process.env[mongoServiceName + '_SERVICE_HOST'],
-      mongoPort = process.env[mongoServiceName + '_SERVICE_PORT'],
-      mongoDatabase = process.env[mongoServiceName + '_DATABASE'],
-      mongoPassword = process.env[mongoServiceName + '_PASSWORD']
-      mongoUser = process.env[mongoServiceName + '_USER'];
+const ip = process.env.IP || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0'
 
-  if (mongoHost && mongoPort && mongoDatabase) {
-    mongoURLLabel = mongoURL = 'mongodb://';
-    if (mongoUser && mongoPassword) {
-      mongoURL += mongoUser + ':' + mongoPassword + '@';
+const getMongoURL = () => {
+  let mongoURL = process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL || 'mongodb://localhost:27017/loyalty';
+  if (process.env.DATABASE_SERVICE_NAME) {
+    const mongoServiceName = process.env.DATABASE_SERVICE_NAME.toUpperCase();
+    const mongoHost = process.env[mongoServiceName + '_SERVICE_HOST'];
+    const mongoPort = process.env[mongoServiceName + '_SERVICE_PORT'];
+    const mongoDatabase = process.env[mongoServiceName + '_DATABASE'];
+    const mongoPassword = process.env[mongoServiceName + '_PASSWORD'];
+    const mongoUser = process.env[mongoServiceName + '_USER'];
+
+    if (mongoHost && mongoPort && mongoDatabase) {
+      mongoURL = 'mongodb://';
+      if (mongoUser && mongoPassword) {
+        mongoURL += mongoUser + ':' + mongoPassword + '@';
+      }
+      mongoURL += mongoHost + ':' + mongoPort + '/' + mongoDatabase;
     }
-    // Provide UI label that excludes user id and pw
-    mongoURLLabel += mongoHost + ':' + mongoPort + '/' + mongoDatabase;
-    mongoURL += mongoHost + ':' +  mongoPort + '/' + mongoDatabase;
-
   }
+  return mongoURL;
 }
-var db = null,
-    dbDetails = new Object();
 
-var initDb = function(callback) {
-  if (mongoURL == null) return;
+var db = null;
+
+var initDb = function() {
+  const mongoURL = getMongoURL();
+  if (db || mongoURL == null) return;
 
   var mongodb = require('mongodb');
   if (mongodb == null) return;
 
   mongodb.connect(mongoURL, function(err, conn) {
     if (err) {
-      callback(err);
+        console.log(err);
       return;
     }
 
     db = conn;
-    dbDetails.databaseName = db.databaseName;
-    dbDetails.url = mongoURLLabel;
-    dbDetails.type = 'MongoDB';
 
     console.log('Connected to MongoDB at: %s', mongoURL);
   });
 };
 
-app.get('/lex', function (req, res) {
-  // try to initialize the db on every request if it's not already
-  // initialized.
-  if (!db) {
-    initDb(function(err){});
-  }
-  if (db) {
-    var col = db.collection('counts');
-    // Create a document with request IP and current time of request
-    col.insert({ip: req.ip, date: Date.now()});
-    col.count(function(err, count){
-      if (err) {
-        console.log('Error running count. Message:\n'+err);
-      }
-      res.render('index.html', { pageCountMessage : count, dbInfo: dbDetails });
-    });
-  } else {
-    res.render('index.html', { pageCountMessage : null});
-  }
+app.use((req, res, next) => {
+    initDb();
+    next();
 });
 
-app.get('/pagecount', function (req, res) {
-  // try to initialize the db on every request if it's not already
-  // initialized.
-  if (!db) {
-    initDb(function(err){});
-  }
-  if (db) {
-    db.collection('counts').count(function(err, count ){
-      res.send('{ pageCount: ' + count + '}');
-    });
-  } else {
-    res.send('{ pageCount: -1 }');
-  }
+app.post('/env', function (req, res) {
+    res.json(process.env);
 });
 
 app.get('/test', function (req, res) {
@@ -118,93 +89,59 @@ app.get('/test', function (req, res) {
 });
 
 app.post('/book', function(req, res) {
-    if (!db) {
-        initDb(function(err){});
-    }
-    if (db) {
-        var col = db.collection('trip_details');
-        col.insertOne({name: req.body.name,
-            sailingCode: req.body.sailingCode});
-        res.send('{ "status": "success" }');
-    } else {
-        res.send('{ "status": "error", "message": "mongodb not initialized" }');
-    }
+    var col = db.collection('trip_details');
+    col.insertOne({name: req.body.name,
+        sailingCode: req.body.sailingCode});
+    res.send('{ "status": "success" }');
 });
 
-function getProducts(Destination, CruiseLine, callback) {
-    var col = db.collection('products');
-    col.find({Destination: Destination.trim().toLowerCase(), CruiseLine: CruiseLine.trim().toLowerCase()}, function (err, objs) {
-        if (err) {
-            throw err;
-        }
-        callback(objs);
-    });
-}
-
 app.post('/products', function (req, res) {
-    if (!db) {
-        initDb(function(err){});
-    }
-    if (db) {
-        if (req.body.Destination && req.body.CruiseLine) {
-            getProducts(req.body.Destination, req.body.CruiseLine, function (data) {
-                data.forEach(function (element) {
-                    console.log(element);
-                    res.send(element);
-                });
-                //res.send(data);
-            });
-        } else {
-            res.send('{ "status": "error", "message": "missing request params" }');
-        }
+    if (req.body.Destination && req.body.CruiseLine) {
+        db.collection('products')
+            .find({Destination: req.body.Destination.trim().toLowerCase(), CruiseLine: req.body.CruiseLine.trim().toLowerCase()})
+            .toArray()
+            .then(r => res.json(r[0]));
     } else {
-        res.send('{ "status": "error", "message": "mongodb not initialized" }');
+        res.send('{ "status": "error", "message": "missing request params" }');
     }
 });
 
 app.post('/initData', function (req, res) {
-    if (!db) {
-        initDb(function(err){});
-    }
-    if (db) {
-        db.collection('products').remove({});
-        fs.readFile('json/products.json', 'utf8', function (err, data) {
-            if (err) throw err;
-            console.log(data);
-            var json = JSON.parse(data);
+    db.collection('products').remove({});
+    fs.readFile('json/products.json', 'utf8', function (err, data) {
+        if (err) throw err;
+        console.log(data);
+        var json = JSON.parse(data);
 
-            db.collection('products').insert(json, function(err, doc) {
-                if (err) throw err;
-            })
-        });
-        fs.readFile('json/products2.json', 'utf8', function (err, data) {
+        db.collection('products').insert(json, function(err, doc) {
             if (err) throw err;
-            console.log(data);
-            var json = JSON.parse(data);
+        })
+    });
+    fs.readFile('json/products2.json', 'utf8', function (err, data) {
+        if (err) throw err;
+        console.log(data);
+        var json = JSON.parse(data);
 
-            db.collection('products').insert(json, function(err, doc) {
-                if (err) throw err;
-            })
-        });
-        fs.readFile('json/products3.json', 'utf8', function (err, data) {
+        db.collection('products').insert(json, function(err, doc) {
             if (err) throw err;
-            console.log(data);
-            var json = JSON.parse(data);
+        })
+    });
+    fs.readFile('json/products3.json', 'utf8', function (err, data) {
+        if (err) throw err;
+        console.log(data);
+        var json = JSON.parse(data);
 
-            db.collection('products').insert(json, function(err, doc) {
-                if (err) throw err;
-            })
-        });
-        res.send('{ "status": "complete" }');
-    } else {
-        res.send('{ "status": "error", "message": "mongodb not initialized" }');
-    }
+        db.collection('products').insert(json, function(err, doc) {
+            if (err) throw err;
+        })
+    });
+    res.send('{ "status": "complete" }');
 });
 
 // error handling
 app.use(function(err, req, res, next){
   console.error(err.stack);
-  res.status(500).send('Something bad happened!');
+  res.status(500).send(err.stack);
 });
 
 initDb(function(err){

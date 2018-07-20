@@ -1,6 +1,8 @@
 import { get, post, set } from 'utils/action';
 
-const api = 'http://localhost:8080/';
+export const isDev = () => process.env.NODE_ENV === 'development';
+
+const api = isDev() ? 'http://localhost:8080/' : '/';
 
 export const setStep = set('step');
 
